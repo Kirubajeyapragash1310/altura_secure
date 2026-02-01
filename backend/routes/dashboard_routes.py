@@ -1,24 +1,26 @@
-from flask import jsonify
-from . import dashboard_bp
-from utils import run_s3_security_check, run_ec2_security_check
-from models.alert_model import Alert
+# backend/routes/dashboard_routes.py
 
-@dashboard_bp.route("/api/dashboard", methods=["GET"])
+from flask import Blueprint, jsonify
+from backend.utils import (
+    get_total_users,
+    get_active_sessions,
+    get_security_status,
+    get_s3_usage,
+    get_recent_activities,
+    get_alerts
+)
+
+dashboard_bp = Blueprint("dashboard", __name__, url_prefix="/api")
+
+@dashboard_bp.route("/dashboard", methods=["GET"])
 def dashboard():
-    s3_result = run_s3_security_check()
-    ec2_result = run_ec2_security_check()
+    data = {
+        "total_users": get_total_users(),
+        "active_sessions": get_active_sessions(),
+        "security_status": get_security_status(),
+        "s3_usage": get_s3_usage(),
+        "recent_activities": get_recent_activities(),
+        "alerts": get_alerts()
+    }
+    return jsonify(data)
 
-    alerts = []
-
-    if s3_result["status"] == "Risk":
-        for bucket in s3_result["issues"]:
-            alerts.append(Alert(f"S3 bucket '{bucket}' is public", "High").to_dict())
-
-    if ec2_result["status"] == "Risk":
-        for inst in ec2_result["issues"]:
-            alerts.append(Alert(f"EC2 instance '{inst}' open to 0.0.0.0/0", "High").to_dict())
-
-    return jsonify({
-        "security_status": "Risk" if alerts else "Safe",
-        "alerts": alerts
-    })

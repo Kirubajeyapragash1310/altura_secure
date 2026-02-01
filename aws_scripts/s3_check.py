@@ -1,21 +1,14 @@
 import boto3
+from botocore.exceptions import ClientError
 
-def check_public_buckets(region="ap-south-1"):
-    s3 = boto3.client("s3", region_name=region)
-    public_buckets = []
-
+def check_public_buckets():
+    s3 = boto3.client("s3")
+    buckets = []
     try:
-        buckets = s3.list_buckets()["Buckets"]
-        for bucket in buckets:
-            name = bucket["Name"]
-            try:
-                acl = s3.get_bucket_acl(Bucket=name)
-                for grant in acl["Grants"]:
-                    if "AllUsers" in str(grant):
-                        public_buckets.append(name)
-            except Exception:
-                continue
-    except Exception as e:
+        response = s3.list_buckets()
+        for b in response['Buckets']:
+            # Here you can add logic to check if bucket is public
+            buckets.append(b['Name'])
+    except ClientError as e:
         print(f"Error fetching buckets: {e}")
-
-    return public_buckets
+    return buckets
