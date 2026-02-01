@@ -1,0 +1,58 @@
+"<!DOCTYPE html><html><head><title>Altura Secure</title></head><body></body></html>" 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Altura Secure Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- For charts -->
+</head>
+<body>
+    <header>
+        <h1>Altura Secure Dashboard</h1>
+    </header>
+
+    <main>
+        <!-- Stats Cards -->
+        <section class="cards">
+            <div class="card">
+                <h2>Total Users</h2>
+                <p id="total-users">0</p>
+            </div>
+            <div class="card">
+                <h2>Active Sessions</h2>
+                <p id="active-sessions">0</p>
+            </div>
+            <div class="card">
+                <h2>Security Status</h2>
+                <p id="security-status" class="safe">Safe</p>
+            </div>
+            <div class="card">
+                <h2>AWS S3 Usage</h2>
+                <p id="s3-usage">0 GB</p>
+            </div>
+        </section>
+
+        <!-- Charts -->
+        <section class="charts">
+            <h2>Session Trend</h2>
+            <canvas id="sessionsChart"></canvas>
+        </section>
+
+        <!-- Activities -->
+        <section class="recent-activities">
+            <h2>Recent Activities</h2>
+            <ul id="activity-list"></ul>
+        </section>
+
+        <!-- Alerts -->
+        <section class="alerts-summary">
+            <h2>Alerts Summary</h2>
+            <ul id="alerts-list"></ul>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
